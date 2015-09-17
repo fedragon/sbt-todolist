@@ -6,13 +6,13 @@ import Keys._
 object TodoListPlugin extends AutoPlugin {
   object autoImport {
     val todolist = taskKey[Seq[File]]("Look for TODOs in source files.")
-    val todolistTags = settingKey[Seq[String]]("Tags to look for.")
+    val todolistTags = settingKey[Set[String]]("Tags to look for.")
 
     lazy val baseTodoListSettings: Seq[Def.Setting[_]] = Seq(
       todolist := {
         TodoList((sources in Compile).value ++ (sources in Test).value, (todolistTags in todolist).value)
       },
-      todolistTags in todolist := Seq("TODO", "FIXME")
+      todolistTags in todolist := Set("TODO", "FIXME")
     )
   }
 
@@ -27,7 +27,7 @@ object TodoListPlugin extends AutoPlugin {
 object TodoList {
   import scala.io.Source
 
-  def apply(sources: Seq[File], tags: Seq[String]): Seq[File] = {
+  def apply(sources: Seq[File], tags: Set[String]): Seq[File] = {
     sources.foreach { f =>
       val todos = Source.fromFile(f).getLines.zipWithIndex.flatMap {
         case (line, index) =>
