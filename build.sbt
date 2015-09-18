@@ -27,6 +27,17 @@ publishArtifact in Test := false
 pomIncludeRepository := { _ => false }
 
 pomExtra := (
+  <licenses>
+    <license>
+      <name>MIT</name>
+      <url>https://github.com/fedragon/sbt-todolist/blob/master/LICENSE</url>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:git:github.com/fedragon/sbt-todolist</connection>
+    <developerConnection>scm:git:git@github.com:fedragon/sbt-todolist</developerConnection>
+    <url>github.com/fedragon/sbt-todolist</url>
+  </scm>
   <developers>
     <developer>
       <id>fedragon</id>
