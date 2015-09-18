@@ -5,29 +5,28 @@ import Keys._
 
 object TodoListPlugin extends AutoPlugin {
   object autoImport {
-    val todolist = taskKey[Seq[File]]("Look for TODOs in source files.")
-    val todolistTags = settingKey[Set[String]]("Tags to look for.")
-
-    lazy val baseTodoListSettings: Seq[Def.Setting[_]] = Seq(
-      todolist := {
-        TodoList((sources in Compile).value ++ (sources in Test).value, (todolistTags in todolist).value)
-      },
-      todolistTags in todolist := Set("TODO", "FIXME")
-    )
+    lazy val todolist = taskKey[Unit]("Finds and prints 'work in progress' tags (TODO, FIXME, ...) to the console")
+    lazy val todolistTags = settingKey[Set[String]]("Tags to look for")
   }
 
   import autoImport._
-  override def requires = sbt.plugins.JvmPlugin
+
+  // enable automatically this plugin, without needing to `enablePlugins` in a project's build.sbt
   override def trigger = allRequirements
-  override val projectSettings =
-    inConfig(Compile)(baseTodoListSettings) ++
-    inConfig(Test)(baseTodoListSettings)
+
+  // add the task and a set of default tags
+  override def projectSettings = Seq(
+    todolistTags := Set("FIXME", "TODO", "WIP", "XXX"),
+    todolist := {
+      TodoList((sources in Compile).value ++ (sources in Test).value, (todolistTags in todolist).value)
+    }
+  )
 }
 
 object TodoList {
   import scala.io.Source
 
-  def apply(sources: Seq[File], tags: Set[String]): Seq[File] = {
+  def apply(sources: Seq[File], tags: Set[String]): Unit = {
     sources.foreach { f =>
       val todos = Source.fromFile(f).getLines.zipWithIndex.flatMap {
         case (line, index) =>
@@ -40,6 +39,5 @@ object TodoList {
           println(s"${f.getName}:$index $line")
       }
     }
-    sources
   }
 }
