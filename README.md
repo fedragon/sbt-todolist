@@ -11,9 +11,13 @@ Add the following line to your `plugins.sbt` file:
 ## Usage
 
     sbt todolist
+    // prints out all occurrences of configured tasks in source files
+
+    sbt todolistTags
+    // shows the configured tags
 
 ## Customize tags
 
 Add the following line to your `build.sbt` file:
 
-    todolist := Set("wtf", "oh rly?")
+    todolistTags := Set("<a tag>", "<another tag>")
