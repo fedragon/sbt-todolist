@@ -28,15 +28,20 @@ object TodoList {
 
   def apply(sources: Seq[File], tags: Set[String]): Unit = {
     sources.foreach { f =>
-      val todos = Source.fromFile(f).getLines.zipWithIndex.flatMap {
-        case (line, index) =>
-          if(tags.exists(line.contains)) Some((line, index + 1))
-          else None
-      }
+      val bs = Source.fromFile(f)
+      try {
+        val todos = bs.getLines.zipWithIndex.flatMap {
+          case (line, index) =>
+            if(tags.exists(line.contains)) Some((line, index + 1))
+            else None
+        }
 
-      todos.foreach {
-        case (line, index) =>
-          println(s"${f.getName}:$index $line")
+        todos.foreach {
+          case (line, index) =>
+            println(s"${f.getName}:$index $line")
+        }
+      } finally {
+        bs.close()
       }
     }
   }
