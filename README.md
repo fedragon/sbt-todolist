@@ -47,7 +47,7 @@ Add the following lines to your `build.sbt`:
 The two examples above are just aliases for (respectively):
 
     withTodolistSettings(compile, Compile)
-    // the task `compile` in the `Compile` configuration
+    // = the `compile` task in the `Compile` configuration
 
 and
 
