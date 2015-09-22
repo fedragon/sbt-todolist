@@ -18,7 +18,7 @@ object TodoListPlugin extends AutoPlugin {
   override def projectSettings = Seq(
     todolistTags := Set("FIXME", "TODO", "WIP", "XXX"),
     todolist := {
-      TodoList((sources in Compile).value ++ (sources in Test).value, (todolistTags in todolist).value)
+      TodoList(baseDirectory.value, (sources in Compile).value ++ (sources in Test).value, (todolistTags in todolist).value)
     }
   )
 
@@ -34,11 +34,15 @@ object TodoListPlugin extends AutoPlugin {
 }
 
 object TodoList {
+  import scala.Console._
   import scala.io.Source
 
-  def apply(sources: Seq[File], tags: Set[String]): Unit = {
-    sources.foreach { f =>
-      val bs = Source.fromFile(f)
+  private def highlight(msg: String, color: String) =
+    s"$color$msg$RESET"
+
+  def apply(base: File, sources: Seq[File], tags: Set[String]): Unit = {
+    sources.foreach { file =>
+      val bs = Source.fromFile(file)
       try {
         val todos = bs.getLines.zipWithIndex.flatMap {
           case (line, index) =>
@@ -46,9 +50,15 @@ object TodoList {
             else None
         }
 
+        val relativeFileName = base.relativize(file).map(_.toString).getOrElse("Something went wrong! Cannot get relative path for ${file.getName}")
+
         todos.foreach {
           case (line, index) =>
-            println(s"${f.getName}:$index $line")
+            val f = highlight(relativeFileName, BLUE)
+            val i = highlight(index.toString, RED)
+            val l = highlight(line, YELLOW)
+
+            println(s"$f:$i $l")
         }
       } finally {
         bs.close()
