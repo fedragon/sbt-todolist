@@ -6,9 +6,7 @@ organization := "com.github.fedragon"
 
 name := "sbt-todolist"
 
-description := "A dead simple SBT plugin to find tags in source files and print them to the console"
-
-libraryDependencies += "org.scala-sbt" % "sbt" % "0.13.9"
+description := "Dead simple SBT plugin to find tags in source files and print them to the console"
 
 homepage := Some(url("https://github.com/fedragon/sbt-todolist"))
 
