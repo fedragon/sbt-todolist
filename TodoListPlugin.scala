@@ -21,6 +21,16 @@ object TodoListPlugin extends AutoPlugin {
       TodoList((sources in Compile).value ++ (sources in Test).value, (todolistTags in todolist).value)
     }
   )
+
+  // redefine an existing task, adding `todolist` to its dependencies
+  def withTodolistSettings[T](t: TaskKey[T], c: Configuration): Seq[Project.Setting[_]] =
+    inConfig(c)((t in c) <<= (t in c).dependsOn(todolist))
+
+  val compileWithTodolistSettings: Seq[Project.Setting[_]] =
+    withTodolistSettings(compile, Compile)
+
+  val testWithTodolistSettings: Seq[Project.Setting[_]] =
+    withTodolistSettings(test, Test)
 }
 
 object TodoList {
