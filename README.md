@@ -6,6 +6,10 @@ Finds _work in progress_ tags (`TODO`, `FIXME`, ...) in source files and prints 
 
 Add the following line to your local (`project/plugins.sbt`) or global (`~/.sbt/0.13/plugins/plugins.sbt`) configuration:
 
+    resolvers ++= Seq(
+        "Sonatype OSS Releases" at "https://oss.sonatype.org/content/repositories/releases/"
+    )
+
     addSbtPlugin("com.github.fedragon" % "sbt-todolist" % "0.4")
 
 ## Usage
