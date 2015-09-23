@@ -1,4 +1,6 @@
 .ensime
 .ensime_cache/
 
+.history
+
 project/target/
