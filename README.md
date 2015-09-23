@@ -4,7 +4,7 @@ Finds _work in progress_ tags (`TODO`, `FIXME`, ...) in source files and prints 
 
 ## Installation
 
-Add the following line to your `plugins.sbt`:
+Add the following line to your local (`project/plugins.sbt`) or global (`~/.sbt/0.13/plugins/plugins.sbt`) configuration:
 
     addSbtPlugin("com.github.fedragon" % "sbt-todolist" % "0.3")
 
