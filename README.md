@@ -61,4 +61,4 @@ and
 
 The tags to look for can be redefined by adding the following line to your `build.sbt`:
 
-    todolistTags := Set("<a tag>", "<another tag>")
+    todosTags := Set("<a tag>", "<another tag>")
