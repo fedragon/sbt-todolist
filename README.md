@@ -6,19 +6,19 @@ Finds _work in progress_ tags (`TODO`, `FIXME`, ...) in source files and prints 
 
 Add the following line to your local (`project/plugins.sbt`) or global (`~/.sbt/0.13/plugins/plugins.sbt`) configuration:
 
-    addSbtPlugin("com.github.fedragon" % "sbt-todolist" % "0.3")
+    addSbtPlugin("com.github.fedragon" % "sbt-todolist" % "0.4")
 
 ## Usage
 
-    sbt todolist
+    sbt todos
     // prints out all occurrences of configured tasks in source and test files
 
-    sbt todolistTags
+    sbt todosTags
     // shows the configured tags
 
 ### Hooking todolist to an existing task
 
-`todolist` can optionally be added as a dependency of another task (`compile`, `test`, ...) so that it will be executed whenever the other task is executed.
+`todos` can optionally be added as a dependency of another task (`compile`, `test`, ...) so that it will be executed whenever the other task is executed.
 
 #### How to execute it when compiling source files
 

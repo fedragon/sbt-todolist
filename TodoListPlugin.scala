@@ -5,8 +5,8 @@ import Keys._
 
 object TodoListPlugin extends AutoPlugin {
   object autoImport {
-    lazy val todolist = taskKey[Unit]("Finds and prints 'work in progress' tags (TODO, FIXME, ...) to the console")
-    lazy val todolistTags = settingKey[Set[String]]("Tags to look for")
+    lazy val todos = taskKey[Unit]("Finds and prints 'work in progress' tags (TODO, FIXME, ...) to the console")
+    lazy val todosTags = settingKey[Set[String]]("Tags to look for")
   }
 
   import autoImport._
@@ -16,15 +16,15 @@ object TodoListPlugin extends AutoPlugin {
 
   // add the task and a set of default tags
   override def projectSettings = Seq(
-    todolistTags := Set("FIXME", "TODO", "WIP", "XXX"),
-    todolist := {
-      TodoList(baseDirectory.value, (sources in Compile).value ++ (sources in Test).value, (todolistTags in todolist).value)
+    todosTags := Set("FIXME", "TODO", "WIP", "XXX"),
+    todos := {
+      TodoList(baseDirectory.value, (sources in Compile).value ++ (sources in Test).value, (todosTags in todos).value)
     }
   )
 
   // redefine an existing task, adding `todolist` to its dependencies
   def withTodolistSettings[T](t: TaskKey[T], c: Configuration): Seq[Project.Setting[_]] =
-    inConfig(c)((t in c) <<= (t in c).dependsOn(todolist))
+    inConfig(c)((t in c) <<= (t in c).dependsOn(todos))
 
   val compileWithTodolistSettings: Seq[Project.Setting[_]] =
     withTodolistSettings(compile, Compile)
