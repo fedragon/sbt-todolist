@@ -2,6 +2,7 @@ package com.github.fedragon
 
 import sbt._
 import Keys._
+import scala.util.matching.Regex
 
 object TodoListPlugin extends AutoPlugin {
   object autoImport {
@@ -26,10 +27,10 @@ object TodoListPlugin extends AutoPlugin {
   def withTodolistSettings[T](t: TaskKey[T], c: Configuration): Seq[Project.Setting[_]] =
     inConfig(c)((t in c) <<= (t in c).dependsOn(todos))
 
-  val compileWithTodolistSettings: Seq[Project.Setting[_]] =
+  val compileWithTodolistSettings: Seq[Def.Setting[_]] =
     withTodolistSettings(compile, Compile)
 
-  val testWithTodolistSettings: Seq[Project.Setting[_]] =
+  val testWithTodolistSettings: Seq[Def.Setting[_]] =
     withTodolistSettings(test, Test)
 }
 
@@ -41,12 +42,14 @@ object TodoList {
     s"$color$msg$RESET"
 
   def apply(base: File, sources: Seq[File], tags: Set[String]): Unit = {
+    val regexes = tags.map(t => new Regex(s"""(?i).*${t}[\\s|:]+.*"""))
+
     sources.foreach { file =>
       val bs = Source.fromFile(file)
       try {
         val todos = bs.getLines.zipWithIndex.flatMap {
           case (line, index) =>
-            if(tags.exists(line.contains)) Some((line, index + 1))
+            if(regexes.exists(_.findFirstMatchIn(line).isDefined)) Some((line, index + 1))
             else None
         }
 
