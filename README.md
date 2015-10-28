@@ -1,7 +1,8 @@
 # sbt-todolist
 
 Finds _work in progress_ tags (`TODO`, `FIXME`, ...) in source files and prints them to the console.
-The plugin performs a case insensitive search, matching any of the defined tags provided that it is followed by (one or more) whitespaces or `:`s.
+
+By default, the following tags are matched (the search is case insensitive): `TODO`, `FIXME`, `WIP`, `XXX`.
 
 ## Installation
 
@@ -64,4 +65,4 @@ The tags to look for can be redefined by adding the following line to your `buil
 
     todosTags := Set("<a tag>", "<another tag>")
 
-The plugin performs case insensitive searches so the capitalization of a tag does not influence the outcome.
+The plugin performs case insensitive searches so upcasing (or not) a tag does not influence the outcome.
