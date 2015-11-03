@@ -5,9 +5,13 @@ import Keys._
 import scala.util.matching.Regex
 
 object TodoListPlugin extends AutoPlugin {
+  
+  import scala.Console._
+  
   object autoImport {
     lazy val todos = taskKey[Unit]("Finds and prints 'work in progress' tags (TODO, FIXME, ...) to the console")
     lazy val todosTags = settingKey[Set[String]]("Tags to look for")
+    lazy val todosColors = settingKey[TodoList.Colors]("Colors to use when printing the list")
   }
 
   import autoImport._
@@ -18,8 +22,14 @@ object TodoListPlugin extends AutoPlugin {
   // add the task and a set of default tags
   override def projectSettings = Seq(
     todosTags := Set("FIXME", "TODO", "WIP", "XXX"),
+    // todosColors := TodoList.Colors(BLUE, RED, YELLOW), // original colors
+    todosColors := TodoList.Colors(CYAN, RED, YELLOW), // more readable
     todos := {
-      TodoList(baseDirectory.value, (sources in Compile).value ++ (sources in Test).value, (todosTags in todos).value)
+      TodoList(
+          baseDirectory.value,
+          (sources in Compile).value ++ (sources in Test).value,
+          (todosTags in todos).value,
+          (todosColors in todos).value)
     }
   )
 
@@ -38,10 +48,12 @@ object TodoList {
   import scala.Console._
   import scala.io.Source
 
+  case class Colors(filename: String, lineNumber: String, line: String)
+  
   private def highlight(msg: String, color: String) =
     s"$color$msg$RESET"
 
-  def apply(base: File, sources: Seq[File], tags: Set[String]): Unit = {
+  def apply(base: File, sources: Seq[File], tags: Set[String], colors: Colors): Unit = {
     val regexes = tags.map(t => new Regex(s"""(?i).*${t}(\\z|[\\s|:]+.*)"""))
 
     sources.foreach { file =>
@@ -57,9 +69,9 @@ object TodoList {
 
         todos.foreach {
           case (line, index) =>
-            val f = highlight(relativeFileName, BLUE)
-            val i = highlight(index.toString, RED)
-            val l = highlight(line, YELLOW)
+            val f = highlight(relativeFileName, colors.filename)
+            val i = highlight(index.toString, colors.lineNumber)
+            val l = highlight(line, colors.line)
 
             println(s"$f:$i $l")
         }
