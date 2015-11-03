@@ -1,4 +1,4 @@
-package com.github.fedragon
+package com.github.fedragon.todolist
 
 import sbt._
 import Keys._
@@ -42,7 +42,7 @@ object TodoList {
     s"$color$msg$RESET"
 
   def apply(base: File, sources: Seq[File], tags: Set[String]): Unit = {
-    val regexes = tags.map(t => new Regex(s"""(?i).*${t}[\\s|:]+.*"""))
+    val regexes = tags.map(t => new Regex(s"""(?i).*${t}(\\z|[\\s|:]+.*)"""))
 
     sources.foreach { file =>
       val bs = Source.fromFile(file)
