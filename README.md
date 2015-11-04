@@ -12,7 +12,7 @@ Add the following line to your local (`project/plugins.sbt`) or global (`~/.sbt/
         "Sonatype OSS Releases" at "https://oss.sonatype.org/content/repositories/releases/"
     )
 
-    addSbtPlugin("com.github.fedragon" % "sbt-todolist" % "0.4")
+    addSbtPlugin("com.github.fedragon" % "sbt-todolist" % "0.6")
 
 ## Usage
 
