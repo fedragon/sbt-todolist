@@ -6,12 +6,13 @@ import scala.util.matching.Regex
 
 object TodoListPlugin extends AutoPlugin {
   
-  import scala.Console._
-  
   object autoImport {
     lazy val todos = taskKey[Unit]("Finds and prints 'work in progress' tags (TODO, FIXME, ...) to the console")
     lazy val todosTags = settingKey[Set[String]]("Tags to look for")
-    lazy val todosColors = settingKey[TodoList.Colors]("Colors to use when printing the list")
+    lazy val todosColorFilename = settingKey[String]("Color to use when printing filename")
+    lazy val todosColorLineNumber = settingKey[String]("Color to use when printing line number")
+    lazy val todosColorLine = settingKey[String]("Color to use when printing line")
+    
   }
 
   import autoImport._
@@ -22,14 +23,19 @@ object TodoListPlugin extends AutoPlugin {
   // add the task and a set of default tags
   override def projectSettings = Seq(
     todosTags := Set("FIXME", "TODO", "WIP", "XXX"),
-    // todosColors := TodoList.Colors(BLUE, RED, YELLOW), // original colors
-    todosColors := TodoList.Colors(CYAN, RED, YELLOW), // more readable
+    todosColorFilename := TodoList.defaultColors.filename,
+    todosColorLineNumber := TodoList.defaultColors.lineNumber,
+    todosColorLine := TodoList.defaultColors.line,   
     todos := {
       TodoList(
           baseDirectory.value,
           (sources in Compile).value ++ (sources in Test).value,
           (todosTags in todos).value,
-          (todosColors in todos).value)
+          TodoList.Colors(
+              (todosColorFilename in todos).value,
+              (todosColorLineNumber in todos).value,
+              (todosColorLine in todos).value))
+          
     }
   )
 
@@ -49,6 +55,8 @@ object TodoList {
   import scala.io.Source
 
   case class Colors(filename: String, lineNumber: String, line: String)
+  
+  val defaultColors = Colors(CYAN, RED, YELLOW)
   
   private def highlight(msg: String, color: String) =
     s"$color$msg$RESET"
