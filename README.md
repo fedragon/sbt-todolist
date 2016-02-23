@@ -4,6 +4,12 @@ Finds _work in progress_ tags (`TODO`, `FIXME`, ...) in source files and prints 
 
 By default, the following tags are matched (the search is case insensitive): `TODO`, `FIXME`, `WIP`, `XXX`.
 
+## About
+
+This plugin was created (and still is) as a personal exploration of sbt internals.
+
+While there is another plugin offering similar functionality (https://github.com/johanandren/sbt-taglist), each plugin went its own way in what they let you customize (keep reading to find out all the available configuration options) so you might want to have a look at both.
+
 ## Installation
 
 Add the following line to your local (`project/plugins.sbt`) or global (`~/.sbt/0.13/plugins/plugins.sbt`) configuration:
@@ -61,8 +67,21 @@ and
 
 ## Customization
 
+### Tags to look for
+
 The tags to look for can be redefined by adding the following line to your `build.sbt`:
 
     todosTags := Set("<a tag>", "<another tag>")
 
 The plugin performs case insensitive searches so upcasing (or not) a tag does not influence the outcome.
+
+### Highlighting
+
+The highlighting colors can be redefined by setting one (or all) the following in your `build.sbt`:
+
+    import scala.Console._
+    todosColorFilename := CYAN
+    todosColorLineNumber := RED
+    todosColorLine := YELLOW
+
+The colors shown above are the defaults and can be replaced with any valid `scala.Console` color.
