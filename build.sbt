@@ -1,4 +1,4 @@
-import Defaults._
+
 
 sbtPlugin := true
 
@@ -12,12 +12,11 @@ homepage := Some(url("https://github.com/fedragon/sbt-todolist"))
 
 publishMavenStyle := true
 
-publishTo <<= version { (v: String) =>
-  val nexus = "https://oss.sonatype.org/"
-  if (v.trim.endsWith("SNAPSHOT")) Some(
-    "snapshots" at nexus + "content/repositories/snapshots"
-  )
-  else Some("releases" at nexus + "service/local/staging/deploy/maven2")
+publishTo := {
+  version.value.trim match {
+    case snapshot if snapshot.endsWith("SNAPSHOT") => Some(Resolver.sonatypeRepo("snapshots"))
+    case _ => Some(Resolver.sonatypeRepo("releases"))
+  }
 }
 
 publishArtifact in Test := false
@@ -31,15 +30,15 @@ pomExtra := (
       <url>https://github.com/fedragon/sbt-todolist/blob/master/LICENSE</url>
     </license>
   </licenses>
-  <scm>
-    <connection>scm:git:github.com/fedragon/sbt-todolist</connection>
-    <developerConnection>scm:git:git@github.com:fedragon/sbt-todolist</developerConnection>
-    <url>github.com/fedragon/sbt-todolist</url>
-  </scm>
-  <developers>
-    <developer>
-      <id>fedragon</id>
-      <name>Federico Ragona</name>
-    </developer>
-  </developers>
-)
+    <scm>
+      <connection>scm:git:github.com/fedragon/sbt-todolist</connection>
+      <developerConnection>scm:git:git@github.com:fedragon/sbt-todolist</developerConnection>
+      <url>github.com/fedragon/sbt-todolist</url>
+    </scm>
+    <developers>
+      <developer>
+        <id>fedragon</id>
+        <name>Federico Ragona</name>
+      </developer>
+    </developers>
+  )
