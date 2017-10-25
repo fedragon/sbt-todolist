@@ -19,6 +19,13 @@ Add the following line to your local (`project/plugins.sbt`) or global (`~/.sbt/
     )
 
     addSbtPlugin("com.github.fedragon" % "sbt-todolist" % "0.6")
+    
+For sbt 1.x add this to your local (`project/plugins.sbt`) or global (`~/.sbt/1.0/plugins/plugins.sbt`) configuration:
+
+    resolvers += Resolver.sonatypeRepo("releases")
+
+    addSbtPlugin("com.github.fedragon" % "sbt-todolist" % "0.7")
+    
 
 ## Usage
 
